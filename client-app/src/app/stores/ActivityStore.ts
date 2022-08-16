@@ -3,18 +3,12 @@ import agent from "../api/agent";
 import { Activity } from "../models/activity";
 
 
-
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
     selectedActivity: Activity | undefined = undefined;
     editMode = false;
     loading = false;
     loadingInitial = true;
-
-    get activitiesByDate(){
-        return Array.from(this.activityRegistry.values())
-            .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
-    }
 
     constructor() {
         makeAutoObservable(this)
@@ -32,7 +26,21 @@ export default class ActivityStore {
             console.log(err);
             this.setLoadingInitial(false);
         }
-        
+    }
+
+    get activitiesByDate() {
+        return Array.from(this.activityRegistry.values())
+            .sort((a, b) => Date.parse(a.date) - Date.parse(b.date));
+    }
+
+    get groupedActivities() {
+        return Object.entries(
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = activity.date;
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+                return activities;
+            }, {} as {[key: string]: Activity[]})
+        )
     }
 
     loadActivity = async (id: string) => {
