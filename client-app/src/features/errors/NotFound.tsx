@@ -6,7 +6,7 @@ export default function NotFound() {
         <Segment placeholder>
             <Header icon>
                 <Icon name='search' />
-                Oop could not find this
+                Oops could not find this
             </Header>
             <SegmentInline>
                 <Button as={Link} to='/activities' primary>
