@@ -15,7 +15,7 @@ namespace Application.Photos
             public IFormFile file { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, Result<Photo>>
+        public class Handler: IRequestHandler<Command, Result<Photo>>
         {
             private readonly DataContext _context;
             private readonly IUserAccessor _userAccessor;
@@ -40,7 +40,7 @@ namespace Application.Photos
                 var photo = new Photo
                 {
                     Id = photoUploadResult.PublicId,
-                    Url = photoUploadResult.PublicId
+                    Url = photoUploadResult.Url
                 };
 
                 if (!user.Photos.Any(x => x.IsMain)) photo.IsMain = true;
@@ -48,7 +48,7 @@ namespace Application.Photos
                 user.Photos.Add(photo);
 
                 var result = await _context.SaveChangesAsync() > 0;
-                if(result) return Result<Photo>.Success(photo);
+                if (result) return Result<Photo>.Success(photo);
                 return Result<Photo>.Failure("Problem adding photo");
             }
         }
