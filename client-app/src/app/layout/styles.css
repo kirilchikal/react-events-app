@@ -46,3 +46,22 @@ body {
 }
 
 /*end home page styles*/
+
+
+/*Profile page (TODO: move styles)*/
+.dzStyle {
+  border: dashed 2px #ccc;
+  border-radius: 5px;
+  padding-top: 30px;
+  text-align: center;
+  height: 200;
+  padding-bottom: 10px;
+}
+
+.dzActive {
+  border-color: #2b9f2d;
+}
+
+.dzActiveColor {
+  color: #2b9f2d;
+}
