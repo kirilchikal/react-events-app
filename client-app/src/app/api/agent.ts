@@ -87,8 +87,10 @@ const Profiles = {
         formData.append('file', file);
         return axios.post<Photo>('photos', formData, {
             headers: {'Content-Type': 'multipart/form-data'}
-        });
-    }
+        })
+    },
+    setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
+    deletePhoto: (id: string) => requests.del(`/photos/${id}`)
 }
 
 const agent = {

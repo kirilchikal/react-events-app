@@ -1,8 +1,8 @@
 import { observer } from "mobx-react-lite";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { Card, Tab, Image, Header, Grid, Button } from "semantic-ui-react";
 import ImageUploader from "../../app/common/imageUplaod/ImageUploader";
-import { Profile } from "../../app/models/profile";
+import { Photo, Profile } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";
 
 interface Props {
@@ -10,11 +10,23 @@ interface Props {
 }
 
 export default observer(function ProfilePhotos({ profile }: Props) {
-  const { profileStore: { isCurrentUser, uploadImage, isImageUploading }} = useStore();
+  const { profileStore: { isCurrentUser, uploadImage, isImageUploading, 
+    loading, setMainPhoto, deletePhoto }} = useStore();
   const [addPhotoState, setAddPhotoState] = useState(false);
+  const [targetImg, setTargetImg] = useState('');
 
   function handleImageUpload(file: Blob) {
     uploadImage(file).then(() => setAddPhotoState(false));
+  }
+
+  function handleSetMainPhoto(photo: Photo, e: SyntheticEvent<HTMLButtonElement>) {
+    setTargetImg(e.currentTarget.name);
+    setMainPhoto(photo);
+  }
+
+  function handleDeletePhoto(photo: Photo, e: SyntheticEvent<HTMLButtonElement>) {
+    setTargetImg(e.currentTarget.name);
+    deletePhoto(photo);
   }
 
   return (
@@ -39,6 +51,28 @@ export default observer(function ProfilePhotos({ profile }: Props) {
               {profile.photos?.map((photo) => (
                 <Card key={photo.id}>
                   <Image src={photo.url} />
+                  {isCurrentUser && (
+                    <Button.Group>
+                      <Button 
+                        basic 
+                        content='Main' 
+                        color="green"
+                        name={'m' + photo.id}
+                        loading={'m' + photo.id === targetImg && loading} 
+                        disabled={photo.isMain}
+                        onClick={e => handleSetMainPhoto(photo, e)}
+                      />
+                      <Button
+                        basic 
+                        content='Delete' 
+                        color="red"
+                        name={photo.id}
+                        disabled={photo.isMain}
+                        loading={photo.id === targetImg && loading}
+                        onClick={e => handleDeletePhoto(photo, e)}
+                      />
+                    </Button.Group>
+                  )}
                 </Card>
               ))}
             </Card.Group>
