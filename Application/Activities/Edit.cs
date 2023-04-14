@@ -43,7 +43,7 @@ namespace Application.Activities
 
                 var result = await _context.SaveChangesAsync() > 0;
 
-                if (!result) return Result<Unit>.Failure("Failed to update the event0");
+                if (!result) return Result<Unit>.Failure("Failed to update the event");
 
                 return Result<Unit>.Success(Unit.Value);
             }
