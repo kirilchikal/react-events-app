@@ -8,12 +8,18 @@ interface Props {
 }
 
 export default observer(function ProfileView({profile}: Props) {
+    function limitText(text: string | undefined, length: number) {
+        if (text) {
+            return text.length > length ? text.substring(0, length - 3) + '...' : text;
+        }
+    }
+
     return (
         <Card as={Link} to={`/profiles/${profile.username}`}>
             <Image src={profile.image || '/assets/user.png'} />
             <Card.Content>
                 <Card.Header>{profile.displayName}</Card.Header>
-                <Card.Description>User Bio</Card.Description>
+                <Card.Description>{limitText(profile.bio, 40)}</Card.Description>
             </Card.Content>
             <Card.Content extra>
                 <Icon name='user' />
